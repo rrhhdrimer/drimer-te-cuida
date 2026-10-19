@@ -102,7 +102,15 @@
     .sum dd{margin:0;font-weight:600;font-size:14.5px;word-break:break-word}
     .acttitle{font-weight:700;color:var(--navy);margin-top:14px}
     .access{font-size:13.5px;color:var(--muted);background:#f7f8fb;border-radius:8px;padding:8px 10px;margin:6px 0 10px;word-break:break-word}
-    .privacy{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);white-space:pre-wrap;background:#fafbfc;margin-top:6px}
+    .gtag{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;margin:2px 4px 2px 0;vertical-align:middle}
+    .gtag.CAP1{background:#fff1cc;color:#8a5a00}
+    .gtag.CAP2{background:#ece8ff;color:#4b3aa8}
+    .capbtn .gtag{margin-bottom:6px}
+    .capbtn[aria-pressed=true].CAP1,.capbtn.CAP1:not(:disabled):hover{border-color:#e0a800}
+    .capbtn[aria-pressed=true].CAP2,.capbtn.CAP2:not(:disabled):hover{border-color:#7a66d6}
+    .capbtn[aria-pressed=true].CAP1{background:#fffaeb}
+    .capbtn[aria-pressed=true].CAP2{background:#f6f4ff}
+    .capbtn:disabled .gtag{opacity:.55}
     .checkline{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14.5px;cursor:pointer}
     .checkline input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
     .success{text-align:center}
@@ -197,14 +205,15 @@
         <div class="choices">
           <label class="choice" id="c_consulta">
             <input type="checkbox" id="actConsulta">
-            <span><b>Consulta médico-ocupacional</b>
+            <span><b>👨‍⚕️ Consulta médico-ocupacional</b>
               <small>Atención individual de 12 minutos · de 8:45 am a 11:00 am</small>
               <span class="tag" data-modtag></span></span>
           </label>
           <label class="choice" id="c_cap">
             <input type="checkbox" id="actCap">
-            <span><b>Capacitación «Vida saludable»</b>
-              <small>45 minutos · Grupo 1 (11:15 am) o Grupo 2 (2:00 pm)</small>
+            <span><b>🧑‍🏫 Capacitación «Vida saludable»</b>
+              <small>45 minutos · elige un grupo:</small>
+              <span class="gtag CAP1">Grupo 1 (Mañana) · 11:15 am</span><span class="gtag CAP2">Grupo 2 (Tarde) · 2:00 pm</span><br>
               <span class="tag" data-modtag></span></span>
           </label>
         </div>
@@ -233,11 +242,8 @@
       <!-- Paso 4 -->
       <section id="s4" class="hidden">
         <h2 tabindex="-1">Revisa y confirma</h2>
+        <p class="hint">Verifica que tus datos y horarios sean correctos antes de confirmar.</p>
         <div id="reviewBox"></div>
-        <label class="f" style="margin-top:20px">Aviso de privacidad</label>
-        <div class="privacy" id="privText" tabindex="0"></div>
-        <label class="checkline"><input type="checkbox" id="priv"> <span>He leído el aviso de privacidad y autorizo el tratamiento de mis datos para gestionar mi inscripción.</span></label>
-        <div class="ferr" id="e_priv"></div>
         <div class="alert" id="a4"></div>
         <div class="actions">
           <button type="button" class="btn ghost" data-back="3" id="back4">Atrás</button>
@@ -294,7 +300,7 @@
    *  CONFIGURACIÓN: pega aquí la URL de tu Aplicación web
    *  de Apps Script (termina en /exec). Ver GUIA_INSTALACION.md
    * ========================================================= */
-  var API_URL = 'https://script.google.com/macros/s/AKfycbzDoe3rv5CHt2Yn_ffXk7gLac6jpbieMydwb5VimSqPJzoXoA3tFRJfV3GvZv-gNPcb/exec';
+  var API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';
 
   var MSG = {
     FULL: 'Este horario acaba de completarse. Elige otro disponible.',
@@ -370,6 +376,9 @@
     return ((h % 12) || 12) + ':' + m[2] + (h < 12 ? ' am' : ' pm');
   }
   function rango(x){ return ampm(x.inicio) + ' – ' + ampm(x.fin); }
+  var ACT_TITLE = { consulta: '👨‍⚕️ Consulta médico-ocupacional', capacitacion: '🧑‍🏫 Capacitación «Vida saludable»' };
+  var CAP_LABEL = { CAP1: 'Grupo 1 (Mañana)', CAP2: 'Grupo 2 (Tarde)' };
+  function capTag(id){ return el('span', {class:'gtag ' + id, text: CAP_LABEL[id] || id}); }
   function modLabel(){ return S.grupo === 'FFVV' ? 'Virtual' : 'Presencial'; }
   function invalidateRequest(){ S.reqId = null; }
 
@@ -399,7 +408,6 @@
       $('hTitle').textContent = c.evento || 'Drimer te Cuida';
       $('hSub').textContent = c.subtitulo || '';
       $('support').textContent = c.soporte ? 'Soporte: ' + c.soporte : '';
-      $('privText').textContent = c.privacidad.texto || '';
       if (c.medico && (c.medico.nombre || c.medico.presentacion)) {
         $('hDocName').textContent = c.medico.nombre || '';
         $('hDocText').textContent = c.medico.presentacion || '';
@@ -522,7 +530,7 @@
           onclick: function(){ S.slot = s.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
         }, el('span', {class:'t'}, el('span', {text: ampm(s.inicio) + ' –'}), ' ', el('span', {text: ampm(s.fin)})), el('span', {class:'s', text: status})));
       });
-      box.appendChild(el('h3', {text:'Consulta médico-ocupacional'}));
+      box.appendChild(el('h3', {text: ACT_TITLE.consulta}));
       box.appendChild(el('p', {class:'hint', text:'Turnos de 12 minutos · Modalidad ' + modLabel().toLowerCase() + ' · Elige un horario.'}));
       box.appendChild(grid);
       box.appendChild(el('div', {class:'ferr', id:'e_slot'}));
@@ -533,11 +541,12 @@
         var sel = S.cap === c.id;
         var status = !c.disponible ? (c.cerrado ? 'No disponible' : 'Horario completo') : (sel ? 'Horario seleccionado' : (c.restantes === 1 ? 'Queda 1 cupo' : 'Quedan ' + c.restantes + ' cupos'));
         caps.appendChild(el('button', {
-          type:'button', class:'capbtn', 'aria-pressed': String(sel), disabled: !c.disponible,
+          type:'button', class:'capbtn ' + c.id, 'aria-pressed': String(sel), disabled: !c.disponible,
+          'aria-label': (CAP_LABEL[c.id] || c.etiqueta) + ', ' + rango(c) + ', ' + status,
           onclick: function(){ S.cap = c.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
-        }, el('b', {text: c.etiqueta}), el('span', {class:'h', text: rango(c)}), el('span', {class:'s', text: status})));
+        }, capTag(c.id), el('span', {class:'h', text: rango(c)}), el('span', {class:'s', text: status})));
       });
-      box.appendChild(el('h3', {text:'Capacitación «Vida saludable»'}));
+      box.appendChild(el('h3', {text: ACT_TITLE.capacitacion}));
       box.appendChild(el('p', {class:'hint', text:'Elige un solo grupo · Modalidad ' + modLabel().toLowerCase() + '.'}));
       box.appendChild(caps);
       box.appendChild(el('div', {class:'ferr', id:'e_cap'}));
@@ -568,12 +577,13 @@
     var parts = [dl];
     if (S.act.consulta) {
       var s = findSlot(S.slot);
-      parts.push(el('div', {class:'acttitle', text:'Consulta médico-ocupacional'}));
+      parts.push(el('div', {class:'acttitle', text: ACT_TITLE.consulta}));
       parts.push(el('dl', null, row('Horario', rango(s)), row('Modalidad', modLabel())));
     }
     if (S.act.capacitacion) {
       var c = findCap(S.cap);
-      parts.push(el('div', {class:'acttitle', text:'Capacitación ' + c.etiqueta}));
+      parts.push(el('div', {class:'acttitle', text: ACT_TITLE.capacitacion}));
+      parts.push(capTag(c.id));
       parts.push(el('dl', null, row('Horario', rango(c)), row('Modalidad', modLabel())));
     }
     $('reviewBox').replaceChildren(el('div', {class:'sum'}, parts));
@@ -586,11 +596,9 @@
     if (text) $('busyText').textContent = text;
   }
 
-  $('priv').addEventListener('change', function(){ setErr('priv', ''); });
 
   $('confirm').addEventListener('click', function(){
     if (S.busy) return;
-    if (!$('priv').checked) { setErr('priv', 'Debes aceptar el aviso de privacidad para continuar.'); return; }
     alertBox('a4', '', '');
     setBusy(true, 'Verificando disponibilidad…');
     run('getAvailability', S.grupo).then(function(av){
@@ -614,7 +622,6 @@
         nombre: S.datos.nombre, area: S.datos.area, email: S.datos.email, celular: S.datos.celular,
         consulta: S.act.consulta, capacitacion: S.act.capacitacion,
         consulta_slot_id: S.act.consulta ? S.slot : '', capacitacion_grupo_id: S.act.capacitacion ? S.cap : '',
-        privacidad: true, privacy_version: S.cfg.privacidad.version,
         website: $('website').value
       }).then(handleResult);
     }).catch(function(){
@@ -643,7 +650,6 @@
     if (code === 'CLOSED') { showClosed(msg); return; }
     if (code !== 'BUSY' && code !== 'SERVER') invalidateRequest();
     if (code === 'DUPLICATE') msg += ' Si necesitas tu ticket, usa «Reenviar mi ticket al correo».';
-    if (code === 'PRIVACY_OUTDATED') { alertBox('a4', 'error', msg); setTimeout(function(){ location.reload(); }, 2500); return; }
     alertBox('a4', 'error', msg);
   }
 
@@ -656,9 +662,10 @@
   function bookingNodes(b){
     var parts = [el('dl', null, row('Nombre', b.nombre), row('Grupo', b.grupo), row('Área', b.area),
       row('Correo', b.email), b.celular ? row('Celular', b.celular) : null, row('Fecha', b.fecha))];
-    [['consulta', 'Consulta médico-ocupacional'], ['capacitacion', 'Capacitación']].forEach(function(p){
-      var a = b[p[0]]; if (!a) return;
-      parts.push(el('div', {class:'acttitle', text: p[0] === 'capacitacion' ? 'Capacitación ' + a.etiqueta : p[1]}));
+    ['consulta', 'capacitacion'].forEach(function(k){
+      var a = b[k]; if (!a) return;
+      parts.push(el('div', {class:'acttitle', text: ACT_TITLE[k]}));
+      if (k === 'capacitacion') parts.push(capTag(a.id));
       parts.push(el('dl', null,
         row('Horario', a.horario), row('Modalidad', a.modalidad),
         a.estado !== 'CONFIRMADA' ? row('Estado', a.estado === 'CANCELADA' ? 'Cancelada' : a.estado) : null));
@@ -683,14 +690,13 @@
     $('actConsulta').checked = m === 'consulta';
     $('actCap').checked = m === 'capacitacion';
     syncActs();
-    $('priv').checked = false;
     show('s3'); loadAvailability();
   });
   $('finish').addEventListener('click', resetAll);
   $('printTk').addEventListener('click', function(){ window.print(); });
 
   function resetAll(){
-    $('f1').reset(); $('priv').checked = false;
+    $('f1').reset();
     $('actConsulta').checked = false; $('actCap').checked = false;
     Array.prototype.forEach.call(document.querySelectorAll('.choice'), function(c){ c.classList.remove('sel'); });
     S.grupo = ''; S.datos = {}; S.act = {consulta:false, capacitacion:false}; S.slot = ''; S.cap = ''; S.av = null; S.reqId = null; S.last = null;
