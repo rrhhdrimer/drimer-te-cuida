@@ -14,13 +14,26 @@
     *{box-sizing:border-box}
     html,body{margin:0}
     body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-text-size-adjust:100%}
-    .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;padding:24px 16px 64px}
+    .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;padding:24px 16px 64px;overflow:hidden}
+    .hero .wrap.hgrid{display:flex;align-items:flex-end;gap:20px}
+    .hero .htext{flex:1;min-width:0}
+    .hphoto{display:none}
+    @media(min-width:700px){
+      .hero{padding-bottom:0}
+      .hero .wrap.hgrid{max-width:960px}
+      .hero .htext{padding-bottom:36px}
+      body > main{margin-top:24px}
+      .hphoto{display:block;flex:none;width:280px;max-height:340px;object-fit:contain;object-position:bottom;align-self:flex-end}
+      .hphoto.hidden{display:none}
+    }
     .wrap{max-width:720px;margin:0 auto}
     .brand{font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin:0}
     .hero h1{font-size:30px;line-height:1.15;margin:8px 0 4px}
     .hero .sub{font-size:17px;margin:0;opacity:.95}
     .doc{display:flex;gap:12px;align-items:flex-start;margin-top:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px}
     .doc .ic{flex:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .doc .av{flex:none;width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:top;background:#fff;border:2px solid rgba(255,255,255,.5)}
+    @media(min-width:700px){.doc .av{display:none}}
     .doc b{display:block;font-size:15.5px}
     .doc p{margin:2px 0 0;font-size:14px;opacity:.92;white-space:pre-line}
     main{max-width:720px;margin:-44px auto 24px;padding:0 16px}
@@ -51,10 +64,11 @@
     .choice small{display:block;color:var(--muted);font-size:13.5px}
     .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:#eef1f7;color:var(--navy);margin-top:6px}
     .tag.v{background:#e9f0ff;color:#2350a8}.tag.p{background:var(--accent-soft);color:var(--accent-dark)}
-    .slots{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
     @media(min-width:560px){.slots{grid-template-columns:repeat(3,1fr)}}
     .slot{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;text-align:left;font:inherit;color:var(--text);cursor:pointer;min-height:58px}
-    .slot .t{display:block;font-weight:700;font-size:16px}
+    .slot .t{display:block;font-weight:700;font-size:15px}
+    .slot .t span{white-space:nowrap}
     .slot .s{display:block;font-size:12.5px;color:var(--ok)}
     .slot[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
     .slot[aria-pressed=true] .s{color:var(--accent-dark);font-weight:600}
@@ -112,14 +126,18 @@
 </head>
 <body>
   <header class="hero">
-    <div class="wrap">
-      <p class="brand">Miércoles 21 de octubre · Jornada de Salud</p>
-      <h1 id="hTitle">Drimer te Cuida</h1>
-      <p class="sub" id="hSub">¡Conoce a nuestro Médico Ocupacional!</p>
-      <div class="doc hidden" id="hDoc">
-        <div class="ic" aria-hidden="true">🩺</div>
-        <div><b id="hDocName"></b><p id="hDocText"></p></div>
+    <div class="wrap hgrid">
+      <div class="htext">
+        <p class="brand">Miércoles 21 de octubre · Jornada de Salud</p>
+        <h1 id="hTitle">Drimer te Cuida</h1>
+        <p class="sub" id="hSub">¡Conoce a nuestro Médico Ocupacional!</p>
+        <div class="doc hidden" id="hDoc">
+          <img class="av" src="foto_dr_brayan.png" alt="" data-photo>
+          <div class="ic hidden" aria-hidden="true" id="hDocIc">🩺</div>
+          <div><b id="hDocName"></b><p id="hDocText"></p></div>
+        </div>
       </div>
+      <img class="hphoto" src="foto_dr_brayan.png" alt="Dr. Brayan Mucha, médico ocupacional" data-photo>
     </div>
   </header>
 
@@ -180,13 +198,13 @@
           <label class="choice" id="c_consulta">
             <input type="checkbox" id="actConsulta">
             <span><b>Consulta médico-ocupacional</b>
-              <small>Atención individual de 12 minutos · de 08:45 a 11:00</small>
+              <small>Atención individual de 12 minutos · de 8:45 am a 11:00 am</small>
               <span class="tag" data-modtag></span></span>
           </label>
           <label class="choice" id="c_cap">
             <input type="checkbox" id="actCap">
             <span><b>Capacitación «Vida saludable»</b>
-              <small>45 minutos · Grupo 1 (11:15) o Grupo 2 (14:00)</small>
+              <small>45 minutos · Grupo 1 (11:15 am) o Grupo 2 (2:00 pm)</small>
               <span class="tag" data-modtag></span></span>
           </label>
         </div>
@@ -276,7 +294,7 @@
    *  CONFIGURACIÓN: pega aquí la URL de tu Aplicación web
    *  de Apps Script (termina en /exec). Ver GUIA_INSTALACION.md
    * ========================================================= */
-  var API_URL = 'https://script.google.com/macros/s/AKfycbzDoe3rv5CHt2Yn_ffXk7gLac6jpbieMydwb5VimSqPJzoXoA3tFRJfV3GvZv-gNPcb/exec';
+  var API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';
 
   var MSG = {
     FULL: 'Este horario acaba de completarse. Elige otro disponible.',
@@ -345,6 +363,13 @@
     return !msg;
   }
   function alertBox(id, type, msg){ var a = $(id); a.className = 'alert ' + (msg ? type : ''); a.textContent = msg || ''; }
+  function ampm(t){
+    var m = /^(\d{1,2}):(\d{2})/.exec(String(t || ''));
+    if (!m) return String(t || '');
+    var h = Number(m[1]);
+    return ((h % 12) || 12) + ':' + m[2] + (h < 12 ? ' am' : ' pm');
+  }
+  function rango(x){ return ampm(x.inicio) + ' – ' + ampm(x.fin); }
   function modLabel(){ return S.grupo === 'FFVV' ? 'Virtual' : 'Presencial'; }
   function invalidateRequest(){ S.reqId = null; }
 
@@ -474,7 +499,7 @@
       if (S.slot) { var s = findSlot(S.slot); if (!s || !s.disponible) { S.slot = ''; lost = true; } }
       if (S.cap) { var c = findCap(S.cap); if (!c || !c.disponible) { S.cap = ''; lost = true; } }
       if (lost) { invalidateRequest(); alertBox('a3', 'error', MSG.FULL); }
-      $('updated').textContent = 'Disponibilidad actualizada: ' + String(av.actualizado).slice(11, 16) + ' h';
+      $('updated').textContent = 'Disponibilidad actualizada: ' + ampm(String(av.actualizado).slice(11, 16));
       renderAvailability();
     }).catch(function(){
       alertBox('a3', 'error', MSG.NETWORK);
@@ -493,9 +518,9 @@
         var status = !s.disponible ? (s.cerrado ? 'No disponible' : 'Horario completo') : (sel ? 'Horario seleccionado' : 'Disponible · 1 cupo');
         grid.appendChild(el('button', {
           type:'button', class:'slot', 'aria-pressed': String(sel), disabled: !s.disponible,
-          'aria-label': s.inicio + ' a ' + s.fin + ', ' + status,
+          'aria-label': ampm(s.inicio) + ' a ' + ampm(s.fin) + ', ' + status,
           onclick: function(){ S.slot = s.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
-        }, el('span', {class:'t', text: s.inicio + ' – ' + s.fin}), el('span', {class:'s', text: status})));
+        }, el('span', {class:'t'}, el('span', {text: ampm(s.inicio) + ' –'}), ' ', el('span', {text: ampm(s.fin)})), el('span', {class:'s', text: status})));
       });
       box.appendChild(el('h3', {text:'Consulta médico-ocupacional'}));
       box.appendChild(el('p', {class:'hint', text:'Turnos de 12 minutos · Modalidad ' + modLabel().toLowerCase() + ' · Elige un horario.'}));
@@ -510,7 +535,7 @@
         caps.appendChild(el('button', {
           type:'button', class:'capbtn', 'aria-pressed': String(sel), disabled: !c.disponible,
           onclick: function(){ S.cap = c.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
-        }, el('b', {text: c.etiqueta}), el('span', {class:'h', text: c.inicio + ' – ' + c.fin}), el('span', {class:'s', text: status})));
+        }, el('b', {text: c.etiqueta}), el('span', {class:'h', text: rango(c)}), el('span', {class:'s', text: status})));
       });
       box.appendChild(el('h3', {text:'Capacitación «Vida saludable»'}));
       box.appendChild(el('p', {class:'hint', text:'Elige un solo grupo · Modalidad ' + modLabel().toLowerCase() + '.'}));
@@ -544,12 +569,12 @@
     if (S.act.consulta) {
       var s = findSlot(S.slot);
       parts.push(el('div', {class:'acttitle', text:'Consulta médico-ocupacional'}));
-      parts.push(el('dl', null, row('Horario', s.inicio + ' – ' + s.fin), row('Modalidad', modLabel())));
+      parts.push(el('dl', null, row('Horario', rango(s)), row('Modalidad', modLabel())));
     }
     if (S.act.capacitacion) {
       var c = findCap(S.cap);
       parts.push(el('div', {class:'acttitle', text:'Capacitación ' + c.etiqueta}));
-      parts.push(el('dl', null, row('Horario', c.inicio + ' – ' + c.fin), row('Modalidad', modLabel())));
+      parts.push(el('dl', null, row('Horario', rango(c)), row('Modalidad', modLabel())));
     }
     $('reviewBox').replaceChildren(el('div', {class:'sum'}, parts));
   }
@@ -705,6 +730,14 @@
       alertBox('aLk', 'ok', res.message);
     }).catch(function(){ alertBox('aLk', 'error', MSG.NETWORK); })
       .then(function(){ $('lkGo').disabled = false; });
+  });
+
+  // Si la foto no carga, se ocultan las imágenes y se muestra el ícono
+  Array.prototype.forEach.call(document.querySelectorAll('[data-photo]'), function(img){
+    img.addEventListener('error', function(){
+      Array.prototype.forEach.call(document.querySelectorAll('[data-photo]'), function(i){ i.classList.add('hidden'); });
+      $('hDocIc').classList.remove('hidden');
+    });
   });
 
   init();
