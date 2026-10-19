@@ -19,8 +19,10 @@
     .brand{font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin:0}
     .hero h1{font-size:30px;line-height:1.15;margin:8px 0 4px}
     .hero .sub{font-size:17px;margin:0;opacity:.95}
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-    .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:5px 12px;border-radius:999px;font-size:13.5px}
+    .doc{display:flex;gap:12px;align-items:flex-start;margin-top:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px}
+    .doc .ic{flex:none;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:19px}
+    .doc b{display:block;font-size:15.5px}
+    .doc p{margin:2px 0 0;font-size:14px;opacity:.92;white-space:pre-line}
     main{max-width:720px;margin:-44px auto 24px;padding:0 16px}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 28px rgba(20,37,74,.09);padding:22px 20px}
     @media(min-width:600px){.card{padding:28px}}
@@ -90,8 +92,13 @@
     .checkline{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14.5px;cursor:pointer}
     .checkline input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
     .success{text-align:center}
-    .success .big{font-size:22px;font-weight:800;color:var(--ok);margin:4px 0 10px}
-    .code{display:inline-block;font-size:28px;font-weight:800;letter-spacing:.1em;color:var(--navy);background:var(--accent-soft);border:2px dashed var(--accent);border-radius:12px;padding:10px 22px;margin:4px 0 6px}
+    .success .big{font-size:22px;font-weight:800;color:var(--ok);margin:4px 0 6px}
+    .ticket{border:2px dashed var(--accent);border-radius:14px;overflow:hidden;margin:14px 0}
+    .ticket .th{background:var(--navy);color:#fff;padding:14px 16px}
+    .ticket .th small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
+    .ticket .th b{display:block;font-size:18px}
+    .ticket .sum{border:0;margin:0}
+    @media print{body{background:#fff}.hero,footer,.progress,.steplabel,#s5 .actions,#s5 .success .hint,#mailMsg{display:none!important}main{margin:0}.card{box-shadow:none}}
     .loading{display:flex;align-items:center;gap:12px;color:var(--muted);padding:18px 0}
     .spin{width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;flex:none}
     @keyframes sp{to{transform:rotate(360deg)}}
@@ -106,12 +113,12 @@
 <body>
   <header class="hero">
     <div class="wrap">
-      <p class="brand">Drimer · Talento Humano</p>
+      <p class="brand">Miércoles 21 de octubre · Jornada de Salud</p>
       <h1 id="hTitle">Drimer te Cuida</h1>
       <p class="sub" id="hSub">¡Conoce a nuestro Médico Ocupacional!</p>
-      <div class="chips">
-        <span class="chip" id="hDate">Miércoles 21 de octubre de 2026</span>
-        <span class="chip">Inscripción a consultas y capacitaciones</span>
+      <div class="doc hidden" id="hDoc">
+        <div class="ic" aria-hidden="true">🩺</div>
+        <div><b id="hDocName"></b><p id="hDocText"></p></div>
       </div>
     </div>
   </header>
@@ -132,13 +139,12 @@
       <section id="sClosed" class="hidden">
         <h2 tabindex="-1">Inscripciones</h2>
         <div class="alert info" id="closedMsg"></div>
-        <div class="actions"><button type="button" class="btn ghost" data-lookup>Consultar mi inscripción</button></div>
+        <div class="actions"><button type="button" class="btn ghost" data-lookup>Reenviar mi ticket al correo</button></div>
       </section>
 
       <!-- Paso 1 -->
       <section id="s1" class="hidden">
         <h2 tabindex="-1">Tus datos</h2>
-        <div id="medicoBox" class="medico hidden"></div>
         <form id="f1" novalidate>
           <label class="f" for="nombre">Nombres y apellidos</label>
           <input type="text" id="nombre" autocomplete="name" maxlength="100" required>
@@ -226,12 +232,15 @@
       <section id="s5" class="hidden">
         <div class="success">
           <h2 tabindex="-1" class="big" id="okTitle">¡Inscripción registrada!</h2>
-          <div>Código:</div>
-          <div class="code" id="okCode"></div>
-          <p class="hint">Guarda este código o toma una captura de pantalla. Lo necesitarás para consultar tu inscripción.</p>
+          <p class="hint">Este es tu ticket de inscripción. Puedes tomarle una captura de pantalla.</p>
         </div>
-        <div id="okBox"></div>
+        <div class="alert" id="mailMsg"></div>
+        <div class="ticket">
+          <div class="th"><small>Ticket de inscripción</small><b id="tkTitle">Drimer te Cuida</b></div>
+          <div id="okBox"></div>
+        </div>
         <div class="actions">
+          <button type="button" class="btn ghost" id="printTk">Guardar / imprimir</button>
           <button type="button" class="btn ghost hidden" id="addOther"></button>
           <button type="button" class="btn primary" id="finish">Finalizar</button>
         </div>
@@ -239,18 +248,15 @@
 
       <!-- Consultar inscripción -->
       <section id="sLookup" class="hidden">
-        <h2 tabindex="-1">Consultar mi inscripción</h2>
-        <p class="hint">Ingresa el correo con el que te inscribiste y tu código (por ejemplo, DTC-AB12CD).</p>
+        <h2 tabindex="-1">Reenviar mi ticket</h2>
+        <p class="hint">Escribe el correo con el que te inscribiste. Si hay una inscripción registrada, te reenviaremos tu ticket a ese correo.</p>
         <form id="fLookup" novalidate>
           <label class="f" for="lkEmail">Correo electrónico</label>
-          <input type="email" id="lkEmail" autocomplete="email" maxlength="120">
-          <label class="f" for="lkCode">Código de inscripción</label>
-          <input type="text" id="lkCode" maxlength="12" autocapitalize="characters" placeholder="DTC-XXXXXX">
+          <input type="email" id="lkEmail" autocomplete="email" inputmode="email" maxlength="120">
           <div class="alert" id="aLk"></div>
-          <div id="lkBox"></div>
           <div class="actions">
             <button type="button" class="btn ghost" id="lkBack">Volver</button>
-            <button type="submit" class="btn primary" id="lkGo">Consultar</button>
+            <button type="submit" class="btn primary" id="lkGo">Reenviar ticket</button>
           </div>
         </form>
       </section>
@@ -258,7 +264,7 @@
   </main>
 
   <footer>
-    <button type="button" class="btn link" data-lookup>¿Ya te inscribiste? Consulta tu inscripción</button>
+    <button type="button" class="btn link" data-lookup>¿Ya te inscribiste? Reenvía tu ticket al correo</button>
     <div id="support"></div>
   </footer>
 
@@ -270,7 +276,7 @@
    *  CONFIGURACIÓN: pega aquí la URL de tu Aplicación web
    *  de Apps Script (termina en /exec). Ver GUIA_INSTALACION.md
    * ========================================================= */
-  var API_URL = 'https://script.google.com/macros/s/AKfycbzDoe3rv5CHt2Yn_ffXk7gLac6jpbieMydwb5VimSqPJzoXoA3tFRJfV3GvZv-gNPcb/exec';
+  var API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';
 
   var MSG = {
     FULL: 'Este horario acaba de completarse. Elige otro disponible.',
@@ -302,7 +308,7 @@
     }
     return e;
   }
-  var ARG_NAMES = { getPublicConfig: [], getAvailability: ['grupo'], createOrExtendBooking: ['request'], getMyBooking: ['email', 'codigo'] };
+  var ARG_NAMES = { getPublicConfig: [], getAvailability: ['grupo'], createOrExtendBooking: ['request'], reenviarTicket: ['email'] };
   function run(fn){
     var args = Array.prototype.slice.call(arguments, 1);
     if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(API_URL)) {
@@ -367,14 +373,14 @@
       S.cfg = c;
       $('hTitle').textContent = c.evento || 'Drimer te Cuida';
       $('hSub').textContent = c.subtitulo || '';
-      $('hDate').textContent = c.fecha_texto || '';
       $('support').textContent = c.soporte ? 'Soporte: ' + c.soporte : '';
       $('privText').textContent = c.privacidad.texto || '';
-      if (c.medico && c.medico.nombre) {
-        var mb = $('medicoBox');
-        mb.replaceChildren(el('b', {text: c.medico.nombre}), c.medico.presentacion ? el('div', {text: c.medico.presentacion}) : null);
-        mb.classList.remove('hidden');
+      if (c.medico && (c.medico.nombre || c.medico.presentacion)) {
+        $('hDocName').textContent = c.medico.nombre || '';
+        $('hDocText').textContent = c.medico.presentacion || '';
+        $('hDoc').classList.remove('hidden');
       }
+      $('tkTitle').textContent = (c.evento || 'Drimer te Cuida') + ' · ' + (c.fecha_texto || '');
       buildGroups(c.grupos);
       if (!c.abierta) { showClosed(c.mensaje_cierre); return; }
       show('s1');
@@ -588,7 +594,7 @@
       }).then(handleResult);
     }).catch(function(){
       setBusy(false);
-      alertBox('a4', 'error', MSG.NETWORK + ' Si el problema continúa, usa «Consultar mi inscripción» o vuelve a presionar «Confirmar»: no se duplicará tu reserva.');
+      alertBox('a4', 'error', MSG.NETWORK + ' Puedes volver a presionar «Confirmar»: no se duplicará tu reserva.');
     });
   });
 
@@ -596,7 +602,7 @@
     setBusy(false);
     if (res && res.ok) {
       S.last = res.booking; S.reqId = null;
-      renderSuccess(res.booking, res.extended);
+      renderSuccess(res.booking, res.extended, res.correo);
       show('s5');
       return;
     }
@@ -611,7 +617,7 @@
     }
     if (code === 'CLOSED') { showClosed(msg); return; }
     if (code !== 'BUSY' && code !== 'SERVER') invalidateRequest();
-    if (code === 'DUPLICATE') msg += ' Puedes revisarla con «Consultar mi inscripción».';
+    if (code === 'DUPLICATE') msg += ' Si necesitas tu ticket, usa «Reenviar mi ticket al correo».';
     if (code === 'PRIVACY_OUTDATED') { alertBox('a4', 'error', msg); setTimeout(function(){ location.reload(); }, 2500); return; }
     alertBox('a4', 'error', msg);
   }
@@ -619,25 +625,28 @@
   /* ---------- Constancia ---------- */
   function accessNode(text){
     var t = String(text || '');
-    if (/^https:\/\/\S+$/.test(t)) return el('div', {class:'access'}, 'Acceso privado: ', el('a', {href: t, target:'_blank', rel:'noopener noreferrer', text: t}));
+    if (/^https:\/\/\S+$/.test(t)) return el('div', {class:'access'}, 'Enlace de la reunión: ', el('a', {href: t, target:'_blank', rel:'noopener noreferrer', text: t}));
     return el('div', {class:'access', text: t});
   }
   function bookingNodes(b){
-    var parts = [el('dl', null, row('Nombre', b.nombre), row('Grupo', b.grupo), row('Fecha', b.fecha))];
+    var parts = [el('dl', null, row('Nombre', b.nombre), row('Grupo', b.grupo), row('Área', b.area),
+      row('Correo', b.email), b.celular ? row('Celular', b.celular) : null, row('Fecha', b.fecha))];
     [['consulta', 'Consulta médico-ocupacional'], ['capacitacion', 'Capacitación']].forEach(function(p){
       var a = b[p[0]]; if (!a) return;
       parts.push(el('div', {class:'acttitle', text: p[0] === 'capacitacion' ? 'Capacitación ' + a.etiqueta : p[1]}));
       parts.push(el('dl', null,
         row('Horario', a.horario), row('Modalidad', a.modalidad),
         a.estado !== 'CONFIRMADA' ? row('Estado', a.estado === 'CANCELADA' ? 'Cancelada' : a.estado) : null));
-      if (a.acceso) parts.push(accessNode(a.acceso));
+      if (a.acceso && a.estado === 'CONFIRMADA') parts.push(accessNode((a.modalidad === 'Virtual' ? '' : '📍 ') + a.acceso));
     });
     return el('div', {class:'sum'}, parts);
   }
-  function renderSuccess(b, extended){
+  function renderSuccess(b, extended, correo){
     $('okTitle').textContent = extended ? '¡Inscripción actualizada!' : '¡Inscripción registrada!';
-    $('okCode').textContent = b.codigo;
     $('okBox').replaceChildren(bookingNodes(b));
+    if (correo && correo.enviado === true) alertBox('mailMsg', 'ok', 'También te enviamos este ticket a ' + b.email + '. Si no lo ves, revisa la carpeta de spam.');
+    else if (correo && correo.enviado === false && correo.motivo !== 'inactivo') alertBox('mailMsg', 'info', 'Tu inscripción quedó registrada, pero no pudimos enviar el correo en este momento. Toma una captura de este ticket.');
+    else alertBox('mailMsg', '', '');
     var add = $('addOther');
     var missing = !b.consulta || b.consulta.estado !== 'CONFIRMADA' ? 'consulta' : (!b.capacitacion || b.capacitacion.estado !== 'CONFIRMADA' ? 'capacitacion' : '');
     add.classList.toggle('hidden', !missing);
@@ -653,6 +662,7 @@
     show('s3'); loadAvailability();
   });
   $('finish').addEventListener('click', resetAll);
+  $('printTk').addEventListener('click', function(){ window.print(); });
 
   function resetAll(){
     $('f1').reset(); $('priv').checked = false;
@@ -676,7 +686,7 @@
     b.addEventListener('click', function(){
       if (S.current !== 'sLookup') S.prev = S.current;
       if (S.datos.email && !$('lkEmail').value) $('lkEmail').value = S.datos.email;
-      alertBox('aLk', '', ''); $('lkBox').replaceChildren();
+      alertBox('aLk', '', '');
       show('sLookup');
     });
   });
@@ -688,13 +698,11 @@
   $('fLookup').addEventListener('submit', function(ev){
     ev.preventDefault();
     var email = $('lkEmail').value.replace(/\s+/g, '').toLowerCase();
-    var code = $('lkCode').value.replace(/\s+/g, '').toUpperCase();
-    if (!email || !code) { alertBox('aLk', 'error', 'Ingresa tu correo y tu código de inscripción.'); return; }
-    $('lkGo').disabled = true; alertBox('aLk', 'info', 'Consultando…'); $('lkBox').replaceChildren();
-    run('getMyBooking', email, code).then(function(res){
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) { alertBox('aLk', 'error', 'Ingresa un correo electrónico válido.'); return; }
+    $('lkGo').disabled = true; alertBox('aLk', 'info', 'Enviando…');
+    run('reenviarTicket', email).then(function(res){
       if (!res || !res.ok) { alertBox('aLk', 'error', (res && res.message) || MSG.NETWORK); return; }
-      alertBox('aLk', 'ok', 'Código ' + res.booking.codigo);
-      $('lkBox').replaceChildren(bookingNodes(res.booking));
+      alertBox('aLk', 'ok', res.message);
     }).catch(function(){ alertBox('aLk', 'error', MSG.NETWORK); })
       .then(function(){ $('lkGo').disabled = false; });
   });
