@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drimer te Cuida · Inscripción</title>
+  <style>
+    :root{
+      --navy:#14254a; --navy-2:#1f3a6d; --accent:#2a9d8f; --accent-dark:#1f7a6f; --accent-soft:#e7f5f3;
+      --bg:#f3f5f9; --card:#ffffff; --text:#1c2333; --muted:#5b6476; --line:#dde2eb;
+      --danger:#b42318; --danger-soft:#fdeceb; --warn-soft:#fff5dc; --ok:#1e7a4d; --ok-soft:#e6f5ec;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-text-size-adjust:100%}
+    .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;padding:24px 16px 64px}
+    .wrap{max-width:720px;margin:0 auto}
+    .brand{font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin:0}
+    .hero h1{font-size:30px;line-height:1.15;margin:8px 0 4px}
+    .hero .sub{font-size:17px;margin:0;opacity:.95}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);padding:5px 12px;border-radius:999px;font-size:13.5px}
+    main{max-width:720px;margin:-44px auto 24px;padding:0 16px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 8px 28px rgba(20,37,74,.09);padding:22px 20px}
+    @media(min-width:600px){.card{padding:28px}}
+    .progress{display:flex;gap:6px;margin-bottom:6px}
+    .progress span{flex:1;height:6px;border-radius:3px;background:var(--line);transition:background .2s}
+    .progress span.on{background:var(--accent)}
+    .steplabel{font-size:13px;color:var(--muted);margin:8px 0 2px}
+    h2{font-size:21px;margin:0 0 14px;outline:none}
+    h3{font-size:16px;margin:22px 0 4px}
+    .hint{font-size:14px;color:var(--muted);margin:0 0 10px}
+    label.f{display:block;font-weight:600;font-size:14.5px;margin:16px 0 6px}
+    .opt{font-weight:400;color:var(--muted)}
+    input[type=text],input[type=email],input[type=tel]{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font:inherit;font-size:16px;background:#fff;color:var(--text)}
+    input[aria-invalid=true]{border-color:var(--danger)}
+    input:focus{outline:3px solid rgba(42,157,143,.3);border-color:var(--accent)}
+    button:focus-visible,.choice:focus-within{outline:3px solid rgba(42,157,143,.45);outline-offset:2px}
+    .ferr{color:var(--danger);font-size:13px;margin-top:4px}
+    .ferr:empty{display:none}
+    .choices{display:grid;gap:10px}
+    @media(min-width:560px){.choices.two{grid-template-columns:1fr 1fr}}
+    .choice{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s}
+    .choice input{margin:3px 0 0;width:20px;height:20px;accent-color:var(--accent);flex:none}
+    .choice.sel{border-color:var(--accent);background:var(--accent-soft)}
+    .choice.disabled{opacity:.6;cursor:not-allowed;background:#f4f5f8}
+    .choice b{display:block;font-size:15.5px}
+    .choice small{display:block;color:var(--muted);font-size:13.5px}
+    .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:#eef1f7;color:var(--navy);margin-top:6px}
+    .tag.v{background:#e9f0ff;color:#2350a8}.tag.p{background:var(--accent-soft);color:var(--accent-dark)}
+    .slots{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    @media(min-width:560px){.slots{grid-template-columns:repeat(3,1fr)}}
+    .slot{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;text-align:left;font:inherit;color:var(--text);cursor:pointer;min-height:58px}
+    .slot .t{display:block;font-weight:700;font-size:16px}
+    .slot .s{display:block;font-size:12.5px;color:var(--ok)}
+    .slot[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+    .slot[aria-pressed=true] .s{color:var(--accent-dark);font-weight:600}
+    .slot:disabled{background:#f1f2f5;color:#9aa1ad;cursor:not-allowed;border-style:dashed}
+    .slot:disabled .s{color:#9aa1ad}
+    .caps{display:grid;gap:10px}
+    @media(min-width:560px){.caps{grid-template-columns:1fr 1fr}}
+    .capbtn{display:block;width:100%;border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fff;text-align:left;font:inherit;color:var(--text);cursor:pointer}
+    .capbtn b{display:block;font-size:15.5px}
+    .capbtn .h{display:block;font-size:20px;font-weight:700;margin:2px 0}
+    .capbtn .s{display:block;font-size:13px;color:var(--ok)}
+    .capbtn[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft)}
+    .capbtn:disabled{background:#f1f2f5;color:#9aa1ad;cursor:not-allowed;border-style:dashed}
+    .capbtn:disabled .s{color:#9aa1ad}
+    .actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+    .actions .grow{flex:1}
+    .btn{appearance:none;border:0;border-radius:10px;padding:13px 20px;font:inherit;font-size:15.5px;font-weight:600;cursor:pointer;min-height:48px}
+    .btn.primary{background:var(--navy);color:#fff;flex:1}
+    .btn.primary:hover{background:var(--navy-2)}
+    .btn.ghost{background:#eef1f6;color:var(--navy)}
+    .btn.link{background:none;color:var(--navy-2);text-decoration:underline;padding:8px 4px;min-height:0}
+    .btn:disabled{opacity:.6;cursor:wait}
+    .alert{border-radius:10px;padding:12px 14px;font-size:14.5px;margin:12px 0}
+    .alert:empty{display:none}
+    .alert.error{background:var(--danger-soft);color:var(--danger)}
+    .alert.info{background:var(--warn-soft);color:#7a5200}
+    .alert.ok{background:var(--ok-soft);color:var(--ok)}
+    .sum{border:1px solid var(--line);border-radius:12px;padding:4px 16px;margin:10px 0}
+    .sum dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:12px 0}
+    .sum dt{color:var(--muted);font-size:14px}
+    .sum dd{margin:0;font-weight:600;font-size:14.5px;word-break:break-word}
+    .acttitle{font-weight:700;color:var(--navy);margin-top:14px}
+    .access{font-size:13.5px;color:var(--muted);background:#f7f8fb;border-radius:8px;padding:8px 10px;margin:6px 0 10px;word-break:break-word}
+    .privacy{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);white-space:pre-wrap;background:#fafbfc;margin-top:6px}
+    .checkline{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14.5px;cursor:pointer}
+    .checkline input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+    .success{text-align:center}
+    .success .big{font-size:22px;font-weight:800;color:var(--ok);margin:4px 0 10px}
+    .code{display:inline-block;font-size:28px;font-weight:800;letter-spacing:.1em;color:var(--navy);background:var(--accent-soft);border:2px dashed var(--accent);border-radius:12px;padding:10px 22px;margin:4px 0 6px}
+    .loading{display:flex;align-items:center;gap:12px;color:var(--muted);padding:18px 0}
+    .spin{width:22px;height:22px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;flex:none}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+    .updated{font-size:12px;color:var(--muted)}
+    .medico{border-left:4px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:8px;font-size:14px;margin-bottom:16px}
+    footer{max-width:720px;margin:0 auto 32px;padding:0 16px;text-align:center;font-size:13px;color:var(--muted)}
+    .hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+    .hidden{display:none !important}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="brand">Drimer · Talento Humano</p>
+      <h1 id="hTitle">Drimer te Cuida</h1>
+      <p class="sub" id="hSub">¡Conoce a nuestro Médico Ocupacional!</p>
+      <div class="chips">
+        <span class="chip" id="hDate">Miércoles 21 de octubre de 2026</span>
+        <span class="chip">Inscripción a consultas y capacitaciones</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <div id="progressBox">
+        <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="steplabel" id="stepLabel"></p>
+      </div>
+
+      <!-- Cargando -->
+      <section id="sLoading">
+        <div class="loading"><div class="spin"></div><span>Cargando la jornada…</span></div>
+      </section>
+
+      <!-- Cerrado / error de carga -->
+      <section id="sClosed" class="hidden">
+        <h2 tabindex="-1">Inscripciones</h2>
+        <div class="alert info" id="closedMsg"></div>
+        <div class="actions"><button type="button" class="btn ghost" data-lookup>Consultar mi inscripción</button></div>
+      </section>
+
+      <!-- Paso 1 -->
+      <section id="s1" class="hidden">
+        <h2 tabindex="-1">Tus datos</h2>
+        <div id="medicoBox" class="medico hidden"></div>
+        <form id="f1" novalidate>
+          <label class="f" for="nombre">Nombres y apellidos</label>
+          <input type="text" id="nombre" autocomplete="name" maxlength="100" required>
+          <div class="ferr" id="e_nombre"></div>
+
+          <label class="f">Grupo de colaboradores</label>
+          <div class="choices two" id="grupos" role="radiogroup" aria-label="Grupo de colaboradores"></div>
+          <div class="ferr" id="e_grupo"></div>
+
+          <label class="f" for="area">Área / gerencia</label>
+          <input type="text" id="area" maxlength="80" autocomplete="organization-title" required>
+          <div class="ferr" id="e_area"></div>
+
+          <label class="f" for="email">Correo electrónico</label>
+          <input type="email" id="email" autocomplete="email" inputmode="email" maxlength="120" required>
+          <div class="ferr" id="e_email"></div>
+
+          <label class="f" for="celular">Celular <span class="opt">(opcional)</span></label>
+          <input type="tel" id="celular" autocomplete="tel" inputmode="tel" maxlength="15" placeholder="9XX XXX XXX">
+          <div class="ferr" id="e_celular"></div>
+
+          <div class="hp" aria-hidden="true"><label for="website">No completar</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="actions"><button type="submit" class="btn primary">Continuar</button></div>
+        </form>
+      </section>
+
+      <!-- Paso 2 -->
+      <section id="s2" class="hidden">
+        <h2 tabindex="-1">¿En qué actividades quieres participar?</h2>
+        <p class="hint">Puedes elegir una o ambas. Si ya te inscribiste a una, usa el mismo correo para añadir la otra.</p>
+        <div class="choices">
+          <label class="choice" id="c_consulta">
+            <input type="checkbox" id="actConsulta">
+            <span><b>Consulta médico-ocupacional</b>
+              <small>Atención individual de 12 minutos · de 08:45 a 11:00</small>
+              <span class="tag" data-modtag></span></span>
+          </label>
+          <label class="choice" id="c_cap">
+            <input type="checkbox" id="actCap">
+            <span><b>Capacitación «Vida saludable»</b>
+              <small>45 minutos · Grupo 1 (11:15) o Grupo 2 (14:00)</small>
+              <span class="tag" data-modtag></span></span>
+          </label>
+        </div>
+        <div class="ferr" id="e_act"></div>
+        <div class="actions">
+          <button type="button" class="btn ghost" data-back="1">Atrás</button>
+          <button type="button" class="btn primary" id="next2">Ver horarios</button>
+        </div>
+      </section>
+
+      <!-- Paso 3 -->
+      <section id="s3" class="hidden">
+        <div class="toolbar">
+          <h2 tabindex="-1" style="margin:0">Elige tu horario</h2>
+          <button type="button" class="btn link" id="refresh">Actualizar disponibilidad</button>
+        </div>
+        <div class="updated" id="updated"></div>
+        <div class="alert" id="a3"></div>
+        <div id="avBox"></div>
+        <div class="actions">
+          <button type="button" class="btn ghost" data-back="2">Atrás</button>
+          <button type="button" class="btn primary" id="next3">Revisar inscripción</button>
+        </div>
+      </section>
+
+      <!-- Paso 4 -->
+      <section id="s4" class="hidden">
+        <h2 tabindex="-1">Revisa y confirma</h2>
+        <div id="reviewBox"></div>
+        <label class="f" style="margin-top:20px">Aviso de privacidad</label>
+        <div class="privacy" id="privText" tabindex="0"></div>
+        <label class="checkline"><input type="checkbox" id="priv"> <span>He leído el aviso de privacidad y autorizo el tratamiento de mis datos para gestionar mi inscripción.</span></label>
+        <div class="ferr" id="e_priv"></div>
+        <div class="alert" id="a4"></div>
+        <div class="actions">
+          <button type="button" class="btn ghost" data-back="3" id="back4">Atrás</button>
+          <button type="button" class="btn primary" id="confirm">Confirmar inscripción</button>
+        </div>
+        <div class="loading hidden" id="busy4"><div class="spin"></div><span id="busyText">Procesando…</span></div>
+      </section>
+
+      <!-- Paso 5 -->
+      <section id="s5" class="hidden">
+        <div class="success">
+          <h2 tabindex="-1" class="big" id="okTitle">¡Inscripción registrada!</h2>
+          <div>Código:</div>
+          <div class="code" id="okCode"></div>
+          <p class="hint">Guarda este código o toma una captura de pantalla. Lo necesitarás para consultar tu inscripción.</p>
+        </div>
+        <div id="okBox"></div>
+        <div class="actions">
+          <button type="button" class="btn ghost hidden" id="addOther"></button>
+          <button type="button" class="btn primary" id="finish">Finalizar</button>
+        </div>
+      </section>
+
+      <!-- Consultar inscripción -->
+      <section id="sLookup" class="hidden">
+        <h2 tabindex="-1">Consultar mi inscripción</h2>
+        <p class="hint">Ingresa el correo con el que te inscribiste y tu código (por ejemplo, DTC-AB12CD).</p>
+        <form id="fLookup" novalidate>
+          <label class="f" for="lkEmail">Correo electrónico</label>
+          <input type="email" id="lkEmail" autocomplete="email" maxlength="120">
+          <label class="f" for="lkCode">Código de inscripción</label>
+          <input type="text" id="lkCode" maxlength="12" autocapitalize="characters" placeholder="DTC-XXXXXX">
+          <div class="alert" id="aLk"></div>
+          <div id="lkBox"></div>
+          <div class="actions">
+            <button type="button" class="btn ghost" id="lkBack">Volver</button>
+            <button type="submit" class="btn primary" id="lkGo">Consultar</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <button type="button" class="btn link" data-lookup>¿Ya te inscribiste? Consulta tu inscripción</button>
+    <div id="support"></div>
+  </footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* =========================================================
+   *  CONFIGURACIÓN: pega aquí la URL de tu Aplicación web
+   *  de Apps Script (termina en /exec). Ver GUIA_INSTALACION.md
+   * ========================================================= */
+  var API_URL = 'https://script.google.com/macros/s/AKfycbzDoe3rv5CHt2Yn_ffXk7gLac6jpbieMydwb5VimSqPJzoXoA3tFRJfV3GvZv-gNPcb/exec';
+
+  var MSG = {
+    FULL: 'Este horario acaba de completarse. Elige otro disponible.',
+    DUPLICATE: 'Ya tienes una reserva confirmada para esta actividad.',
+    CLOSED: 'Las inscripciones a esta jornada ya se encuentran cerradas.',
+    NETWORK: 'No fue posible completar la operación. Revisa tu estado de reserva antes de intentar nuevamente.'
+  };
+  var STEP_NAMES = ['Paso 1 de 5 · Identificación','Paso 2 de 5 · Actividades','Paso 3 de 5 · Horarios','Paso 4 de 5 · Revisión','Paso 5 de 5 · Confirmación'];
+  var SECTIONS = ['sLoading','sClosed','s1','s2','s3','s4','s5','sLookup'];
+
+  var S = { cfg:null, grupo:'', datos:{}, act:{consulta:false, capacitacion:false}, slot:'', cap:'', av:null, reqId:null, busy:false, current:'sLoading', prev:'s1', last:null };
+
+  function $(id){ return document.getElementById(id); }
+  function el(tag, props){
+    var e = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function(k){
+      var v = props[k];
+      if (v === false || v === null || v === undefined) return;
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k.indexOf('on') === 0) e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c === null || c === undefined) continue;
+      if (Array.isArray(c)) c.forEach(function(x){ if (x) e.appendChild(typeof x === 'string' ? document.createTextNode(x) : x); });
+      else e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return e;
+  }
+  var ARG_NAMES = { getPublicConfig: [], getAvailability: ['grupo'], createOrExtendBooking: ['request'], getMyBooking: ['email', 'codigo'] };
+  function run(fn){
+    var args = Array.prototype.slice.call(arguments, 1);
+    if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(API_URL)) {
+      return Promise.reject(new Error('API_URL no configurada'));
+    }
+    var body = { action: fn };
+    ARG_NAMES[fn].forEach(function(name, i){ body[name] = args[i]; });
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 45000) : null;
+    // text/plain evita la verificación CORS previa (preflight), que Apps Script no admite
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(body),
+      redirect: 'follow',
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function(res){
+      if (timer) clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }, function(err){
+      if (timer) clearTimeout(timer);
+      throw err;
+    });
+  }
+  function uuid(){
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'r' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+  function clean(v){ return String(v || '').replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function setErr(id, msg){
+    var box = $('e_' + id); if (box) box.textContent = msg || '';
+    var input = $(id); if (input && input.tagName === 'INPUT') input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    return !msg;
+  }
+  function alertBox(id, type, msg){ var a = $(id); a.className = 'alert ' + (msg ? type : ''); a.textContent = msg || ''; }
+  function modLabel(){ return S.grupo === 'FFVV' ? 'Virtual' : 'Presencial'; }
+  function invalidateRequest(){ S.reqId = null; }
+
+  function show(id){
+    SECTIONS.forEach(function(s){ $(s).classList.toggle('hidden', s !== id); });
+    S.current = id;
+    var m = /^s(\d)$/.exec(id);
+    $('progressBox').classList.toggle('hidden', !m);
+    if (m) {
+      var n = Number(m[1]);
+      Array.prototype.forEach.call(document.querySelectorAll('.progress span'), function(sp, i){ sp.classList.toggle('on', i < n); });
+      $('stepLabel').textContent = STEP_NAMES[n - 1];
+    }
+    var h = $(id).querySelector('h2');
+    window.scrollTo(0, 0);
+    if (h) setTimeout(function(){ h.focus({preventScroll:true}); }, 30);
+  }
+
+  function showClosed(msg){ $('closedMsg').textContent = msg || MSG.CLOSED; show('sClosed'); }
+
+  /* ---------- Inicio ---------- */
+  function init(){
+    show('sLoading');
+    run('getPublicConfig').then(function(c){
+      if (!c || !c.ok) { showClosed((c && c.message) || MSG.NETWORK); return; }
+      S.cfg = c;
+      $('hTitle').textContent = c.evento || 'Drimer te Cuida';
+      $('hSub').textContent = c.subtitulo || '';
+      $('hDate').textContent = c.fecha_texto || '';
+      $('support').textContent = c.soporte ? 'Soporte: ' + c.soporte : '';
+      $('privText').textContent = c.privacidad.texto || '';
+      if (c.medico && c.medico.nombre) {
+        var mb = $('medicoBox');
+        mb.replaceChildren(el('b', {text: c.medico.nombre}), c.medico.presentacion ? el('div', {text: c.medico.presentacion}) : null);
+        mb.classList.remove('hidden');
+      }
+      buildGroups(c.grupos);
+      if (!c.abierta) { showClosed(c.mensaje_cierre); return; }
+      show('s1');
+    }).catch(function(err){
+      showClosed(err && err.message === 'API_URL no configurada'
+        ? 'Configuración pendiente: falta pegar la URL de Apps Script en index.html (variable API_URL).'
+        : MSG.NETWORK);
+    });
+  }
+
+  function buildGroups(grupos){
+    var box = $('grupos'); box.replaceChildren();
+    grupos.forEach(function(g){
+      var virtual = g.modalidad === 'VIRTUAL';
+      var input = el('input', {type:'radio', name:'grupo', value:g.id});
+      var lab = el('label', {class:'choice'}, input,
+        el('span', null,
+          el('b', {text: g.label}),
+          el('small', {text: virtual ? 'Fuerza de Ventas / promotores' : 'Personal de la oficina El Polo'}),
+          el('span', {class:'tag ' + (virtual ? 'v' : 'p'), text: 'Modalidad ' + (virtual ? 'virtual' : 'presencial')})));
+      input.addEventListener('change', function(){
+        if (S.grupo !== g.id) { S.slot = ''; S.cap = ''; S.av = null; invalidateRequest(); }
+        S.grupo = g.id;
+        Array.prototype.forEach.call(box.querySelectorAll('.choice'), function(c){ c.classList.toggle('sel', c.querySelector('input').checked); });
+        setErr('grupo', '');
+      });
+      box.appendChild(lab);
+    });
+  }
+
+  /* ---------- Paso 1 ---------- */
+  function normCel(v){
+    var d = String(v || '').replace(/[\s().-]/g, '');
+    if (d.indexOf('+51') === 0) d = d.slice(3); else if (/^51\d{9}$/.test(d)) d = d.slice(2);
+    return d;
+  }
+  $('f1').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var nombre = clean($('nombre').value), area = clean($('area').value);
+    var email = $('email').value.replace(/\s+/g, '').toLowerCase();
+    var cel = normCel($('celular').value);
+    var ok = true;
+    var nameRe; try { nameRe = new RegExp("^[\\p{L}][\\p{L}\\s'.-]{2,99}$", 'u'); } catch (e) { nameRe = /^[A-Za-zÀ-ÿÑñ][A-Za-zÀ-ÿÑñ\s'.-]{2,99}$/; }
+    ok = setErr('nombre', nameRe.test(nombre) && nombre.split(' ').length >= 2 ? '' : 'Ingresa tus nombres y apellidos (solo letras).') && ok;
+    ok = setErr('grupo', S.grupo ? '' : 'Selecciona tu grupo de colaboradores.') && ok;
+    ok = setErr('area', area.length >= 2 ? '' : 'Ingresa tu área o gerencia.') && ok;
+    ok = setErr('email', /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email) ? '' : 'Ingresa un correo electrónico válido.') && ok;
+    ok = setErr('celular', !cel || /^9\d{8}$/.test(cel) ? '' : 'El celular debe tener 9 dígitos y empezar con 9.') && ok;
+    if (!ok) { var first = document.querySelector('#f1 [aria-invalid=true]'); if (first) first.focus(); return; }
+    var nd = {nombre:nombre, area:area, email:email, celular:cel};
+    if (JSON.stringify(nd) !== JSON.stringify(S.datos)) invalidateRequest();
+    S.datos = nd;
+    $('nombre').value = nombre; $('area').value = area; $('email').value = email;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-modtag]'), function(t){
+      t.textContent = 'Modalidad ' + modLabel().toLowerCase();
+      t.className = 'tag ' + (S.grupo === 'FFVV' ? 'v' : 'p');
+    });
+    show('s2');
+  });
+
+  /* ---------- Paso 2 ---------- */
+  function syncActs(){
+    S.act.consulta = $('actConsulta').checked;
+    S.act.capacitacion = $('actCap').checked;
+    $('c_consulta').classList.toggle('sel', S.act.consulta);
+    $('c_cap').classList.toggle('sel', S.act.capacitacion);
+    if (!S.act.consulta) S.slot = '';
+    if (!S.act.capacitacion) S.cap = '';
+    invalidateRequest();
+    setErr('act', '');
+  }
+  $('actConsulta').addEventListener('change', syncActs);
+  $('actCap').addEventListener('change', syncActs);
+  $('next2').addEventListener('click', function(){
+    if (!S.act.consulta && !S.act.capacitacion) { setErr('act', 'Elige al menos una actividad.'); return; }
+    show('s3');
+    loadAvailability();
+  });
+
+  /* ---------- Paso 3 ---------- */
+  function loadAvailability(lostMsg){
+    alertBox('a3', 'info', lostMsg || '');
+    if (lostMsg) $('a3').className = 'alert error';
+    $('avBox').replaceChildren(el('div', {class:'loading'}, el('div', {class:'spin'}), el('span', {text:'Consultando disponibilidad…'})));
+    $('next3').disabled = true;
+    return run('getAvailability', S.grupo).then(function(av){
+      if (!av || !av.ok) { alertBox('a3', 'error', (av && av.message) || MSG.NETWORK); $('avBox').replaceChildren(); return; }
+      if (!av.abierta) { showClosed(av.mensaje_cierre); return; }
+      S.av = av;
+      var lost = false;
+      if (S.slot) { var s = findSlot(S.slot); if (!s || !s.disponible) { S.slot = ''; lost = true; } }
+      if (S.cap) { var c = findCap(S.cap); if (!c || !c.disponible) { S.cap = ''; lost = true; } }
+      if (lost) { invalidateRequest(); alertBox('a3', 'error', MSG.FULL); }
+      $('updated').textContent = 'Disponibilidad actualizada: ' + String(av.actualizado).slice(11, 16) + ' h';
+      renderAvailability();
+    }).catch(function(){
+      alertBox('a3', 'error', MSG.NETWORK);
+      $('avBox').replaceChildren();
+    }).then(function(){ $('next3').disabled = false; });
+  }
+  function findSlot(id){ return S.av ? S.av.consultas.filter(function(s){ return s.id === id; })[0] : null; }
+  function findCap(id){ return S.av ? S.av.capacitaciones.filter(function(s){ return s.id === id; })[0] : null; }
+
+  function renderAvailability(){
+    var box = $('avBox'); box.replaceChildren();
+    if (S.act.consulta) {
+      var grid = el('div', {class:'slots', role:'group', 'aria-label':'Horarios de consulta'});
+      S.av.consultas.forEach(function(s){
+        var sel = S.slot === s.id;
+        var status = !s.disponible ? (s.cerrado ? 'No disponible' : 'Horario completo') : (sel ? 'Horario seleccionado' : 'Disponible · 1 cupo');
+        grid.appendChild(el('button', {
+          type:'button', class:'slot', 'aria-pressed': String(sel), disabled: !s.disponible,
+          'aria-label': s.inicio + ' a ' + s.fin + ', ' + status,
+          onclick: function(){ S.slot = s.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
+        }, el('span', {class:'t', text: s.inicio + ' – ' + s.fin}), el('span', {class:'s', text: status})));
+      });
+      box.appendChild(el('h3', {text:'Consulta médico-ocupacional'}));
+      box.appendChild(el('p', {class:'hint', text:'Turnos de 12 minutos · Modalidad ' + modLabel().toLowerCase() + ' · Elige un horario.'}));
+      box.appendChild(grid);
+      box.appendChild(el('div', {class:'ferr', id:'e_slot'}));
+    }
+    if (S.act.capacitacion) {
+      var caps = el('div', {class:'caps', role:'group', 'aria-label':'Grupos de capacitación'});
+      S.av.capacitaciones.forEach(function(c){
+        var sel = S.cap === c.id;
+        var status = !c.disponible ? (c.cerrado ? 'No disponible' : 'Horario completo') : (sel ? 'Horario seleccionado' : (c.restantes === 1 ? 'Queda 1 cupo' : 'Quedan ' + c.restantes + ' cupos'));
+        caps.appendChild(el('button', {
+          type:'button', class:'capbtn', 'aria-pressed': String(sel), disabled: !c.disponible,
+          onclick: function(){ S.cap = c.id; invalidateRequest(); alertBox('a3', '', ''); renderAvailability(); }
+        }, el('b', {text: c.etiqueta}), el('span', {class:'h', text: c.inicio + ' – ' + c.fin}), el('span', {class:'s', text: status})));
+      });
+      box.appendChild(el('h3', {text:'Capacitación «Vida saludable»'}));
+      box.appendChild(el('p', {class:'hint', text:'Elige un solo grupo · Modalidad ' + modLabel().toLowerCase() + '.'}));
+      box.appendChild(caps);
+      box.appendChild(el('div', {class:'ferr', id:'e_cap'}));
+    }
+  }
+
+  $('refresh').addEventListener('click', function(){ loadAvailability(); });
+  $('next3').addEventListener('click', function(){
+    var ok = true;
+    if (S.act.consulta && !S.slot) { setErr('slot', 'Elige un horario de consulta.'); ok = false; }
+    if (S.act.capacitacion && !S.cap) { setErr('cap', 'Elige un grupo de capacitación.'); ok = false; }
+    if (!ok) return;
+    renderReview();
+    alertBox('a4', '', '');
+    show('s4');
+  });
+
+  /* ---------- Paso 4 ---------- */
+  function row(dt, dd){ return [el('dt', {text: dt}), el('dd', {text: dd})]; }
+  function renderReview(){
+    var dl = el('dl', null,
+      row('Nombre', S.datos.nombre),
+      row('Grupo', S.grupo === 'FFVV' ? 'FFVV' : 'Oficina El Polo'),
+      row('Área', S.datos.area),
+      row('Correo', S.datos.email),
+      S.datos.celular ? row('Celular', S.datos.celular) : null,
+      row('Fecha', S.cfg.fecha_texto));
+    var parts = [dl];
+    if (S.act.consulta) {
+      var s = findSlot(S.slot);
+      parts.push(el('div', {class:'acttitle', text:'Consulta médico-ocupacional'}));
+      parts.push(el('dl', null, row('Horario', s.inicio + ' – ' + s.fin), row('Modalidad', modLabel())));
+    }
+    if (S.act.capacitacion) {
+      var c = findCap(S.cap);
+      parts.push(el('div', {class:'acttitle', text:'Capacitación ' + c.etiqueta}));
+      parts.push(el('dl', null, row('Horario', c.inicio + ' – ' + c.fin), row('Modalidad', modLabel())));
+    }
+    $('reviewBox').replaceChildren(el('div', {class:'sum'}, parts));
+  }
+
+  function setBusy(on, text){
+    S.busy = on;
+    $('confirm').disabled = on; $('back4').disabled = on;
+    $('busy4').classList.toggle('hidden', !on);
+    if (text) $('busyText').textContent = text;
+  }
+
+  $('priv').addEventListener('change', function(){ setErr('priv', ''); });
+
+  $('confirm').addEventListener('click', function(){
+    if (S.busy) return;
+    if (!$('priv').checked) { setErr('priv', 'Debes aceptar el aviso de privacidad para continuar.'); return; }
+    alertBox('a4', '', '');
+    setBusy(true, 'Verificando disponibilidad…');
+    run('getAvailability', S.grupo).then(function(av){
+      if (av && av.ok) {
+        if (!av.abierta) { setBusy(false); showClosed(av.mensaje_cierre); return null; }
+        S.av = av;
+        var s = S.act.consulta ? findSlot(S.slot) : null;
+        var c = S.act.capacitacion ? findCap(S.cap) : null;
+        if ((S.act.consulta && (!s || !s.disponible)) || (S.act.capacitacion && (!c || !c.disponible))) {
+          if (S.act.consulta && (!s || !s.disponible)) S.slot = '';
+          if (S.act.capacitacion && (!c || !c.disponible)) S.cap = '';
+          invalidateRequest(); setBusy(false);
+          show('s3'); loadAvailability(MSG.FULL);
+          return null;
+        }
+      }
+      setBusy(true, 'Registrando tu inscripción…');
+      if (!S.reqId) S.reqId = uuid();
+      return run('createOrExtendBooking', {
+        request_id: S.reqId, grupo: S.grupo,
+        nombre: S.datos.nombre, area: S.datos.area, email: S.datos.email, celular: S.datos.celular,
+        consulta: S.act.consulta, capacitacion: S.act.capacitacion,
+        consulta_slot_id: S.act.consulta ? S.slot : '', capacitacion_grupo_id: S.act.capacitacion ? S.cap : '',
+        privacidad: true, privacy_version: S.cfg.privacidad.version,
+        website: $('website').value
+      }).then(handleResult);
+    }).catch(function(){
+      setBusy(false);
+      alertBox('a4', 'error', MSG.NETWORK + ' Si el problema continúa, usa «Consultar mi inscripción» o vuelve a presionar «Confirmar»: no se duplicará tu reserva.');
+    });
+  });
+
+  function handleResult(res){
+    setBusy(false);
+    if (res && res.ok) {
+      S.last = res.booking; S.reqId = null;
+      renderSuccess(res.booking, res.extended);
+      show('s5');
+      return;
+    }
+    var code = res ? res.code : 'SERVER';
+    var msg = (res && res.message) || MSG.NETWORK;
+    if (code === 'FULL' || code === 'SLOT_CLOSED') {
+      if (res.actividad === 'consulta') S.slot = '';
+      else if (res.actividad === 'capacitacion') S.cap = '';
+      invalidateRequest();
+      show('s3'); loadAvailability(msg);
+      return;
+    }
+    if (code === 'CLOSED') { showClosed(msg); return; }
+    if (code !== 'BUSY' && code !== 'SERVER') invalidateRequest();
+    if (code === 'DUPLICATE') msg += ' Puedes revisarla con «Consultar mi inscripción».';
+    if (code === 'PRIVACY_OUTDATED') { alertBox('a4', 'error', msg); setTimeout(function(){ location.reload(); }, 2500); return; }
+    alertBox('a4', 'error', msg);
+  }
+
+  /* ---------- Constancia ---------- */
+  function accessNode(text){
+    var t = String(text || '');
+    if (/^https:\/\/\S+$/.test(t)) return el('div', {class:'access'}, 'Acceso privado: ', el('a', {href: t, target:'_blank', rel:'noopener noreferrer', text: t}));
+    return el('div', {class:'access', text: t});
+  }
+  function bookingNodes(b){
+    var parts = [el('dl', null, row('Nombre', b.nombre), row('Grupo', b.grupo), row('Fecha', b.fecha))];
+    [['consulta', 'Consulta médico-ocupacional'], ['capacitacion', 'Capacitación']].forEach(function(p){
+      var a = b[p[0]]; if (!a) return;
+      parts.push(el('div', {class:'acttitle', text: p[0] === 'capacitacion' ? 'Capacitación ' + a.etiqueta : p[1]}));
+      parts.push(el('dl', null,
+        row('Horario', a.horario), row('Modalidad', a.modalidad),
+        a.estado !== 'CONFIRMADA' ? row('Estado', a.estado === 'CANCELADA' ? 'Cancelada' : a.estado) : null));
+      if (a.acceso) parts.push(accessNode(a.acceso));
+    });
+    return el('div', {class:'sum'}, parts);
+  }
+  function renderSuccess(b, extended){
+    $('okTitle').textContent = extended ? '¡Inscripción actualizada!' : '¡Inscripción registrada!';
+    $('okCode').textContent = b.codigo;
+    $('okBox').replaceChildren(bookingNodes(b));
+    var add = $('addOther');
+    var missing = !b.consulta || b.consulta.estado !== 'CONFIRMADA' ? 'consulta' : (!b.capacitacion || b.capacitacion.estado !== 'CONFIRMADA' ? 'capacitacion' : '');
+    add.classList.toggle('hidden', !missing);
+    add.dataset.missing = missing;
+    add.textContent = missing === 'consulta' ? 'Añadir una consulta' : 'Añadir una capacitación';
+  }
+  $('addOther').addEventListener('click', function(){
+    var m = this.dataset.missing;
+    $('actConsulta').checked = m === 'consulta';
+    $('actCap').checked = m === 'capacitacion';
+    syncActs();
+    $('priv').checked = false;
+    show('s3'); loadAvailability();
+  });
+  $('finish').addEventListener('click', resetAll);
+
+  function resetAll(){
+    $('f1').reset(); $('priv').checked = false;
+    $('actConsulta').checked = false; $('actCap').checked = false;
+    Array.prototype.forEach.call(document.querySelectorAll('.choice'), function(c){ c.classList.remove('sel'); });
+    S.grupo = ''; S.datos = {}; S.act = {consulta:false, capacitacion:false}; S.slot = ''; S.cap = ''; S.av = null; S.reqId = null; S.last = null;
+    init();
+  }
+
+  /* ---------- Navegación atrás ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-back]'), function(b){
+    b.addEventListener('click', function(){
+      var n = this.getAttribute('data-back');
+      show('s' + n);
+      if (n === '3') loadAvailability();
+    });
+  });
+
+  /* ---------- Consultar inscripción ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lookup]'), function(b){
+    b.addEventListener('click', function(){
+      if (S.current !== 'sLookup') S.prev = S.current;
+      if (S.datos.email && !$('lkEmail').value) $('lkEmail').value = S.datos.email;
+      alertBox('aLk', '', ''); $('lkBox').replaceChildren();
+      show('sLookup');
+    });
+  });
+  $('lkBack').addEventListener('click', function(){
+    var p = S.prev && S.prev !== 'sLoading' ? S.prev : 's1';
+    show(p);
+    if (p === 's3') loadAvailability();
+  });
+  $('fLookup').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var email = $('lkEmail').value.replace(/\s+/g, '').toLowerCase();
+    var code = $('lkCode').value.replace(/\s+/g, '').toUpperCase();
+    if (!email || !code) { alertBox('aLk', 'error', 'Ingresa tu correo y tu código de inscripción.'); return; }
+    $('lkGo').disabled = true; alertBox('aLk', 'info', 'Consultando…'); $('lkBox').replaceChildren();
+    run('getMyBooking', email, code).then(function(res){
+      if (!res || !res.ok) { alertBox('aLk', 'error', (res && res.message) || MSG.NETWORK); return; }
+      alertBox('aLk', 'ok', 'Código ' + res.booking.codigo);
+      $('lkBox').replaceChildren(bookingNodes(res.booking));
+    }).catch(function(){ alertBox('aLk', 'error', MSG.NETWORK); })
+      .then(function(){ $('lkGo').disabled = false; });
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>
